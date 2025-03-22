@@ -4,9 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1024 Game</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="icon" href="assets/favicon.ico">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" href="./assets/favicon.ico">
     <meta name="description" content="1024游戏 - 合并方块，挑战高分">
+    <!-- 确保资源可以加载 -->
+    <style>
+        /* 备用基础样式，防止CSS加载失败时页面完全没有样式 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #fbfbfb;
+            color: #776e65;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+        .grid-container {
+            background: #bbada0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 20px;
+        }
+        .retry-button {
+            display: inline-block;
+            background: #8f7a66;
+            border-radius: 8px;
+            padding: 12px 24px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -64,6 +98,12 @@
             <p>使用 <strong>方向键</strong> 或 <strong>滑动</strong> 移动方块。相同数字的方块相撞时会合并成为它们的和。</p>
         </div>
     </div>
-    <script src="js/game.js"></script>
+    <script src="./js/game.js"></script>
+    <!-- 添加错误处理脚本 -->
+    <script>
+    window.addEventListener('error', function(e) {
+        console.error('资源加载错误:', e.target.src || e.target.href);
+    }, true);
+    </script>
 </body>
 </html>
