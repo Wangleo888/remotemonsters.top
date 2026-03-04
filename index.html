@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,16 +21,19 @@
             margin: 0;
             padding: 20px;
         }
+
         .container {
             width: 100%;
             max-width: 500px;
         }
+
         .grid-container {
             background: #bbada0;
             border-radius: 8px;
             padding: 12px;
             margin-top: 20px;
         }
+
         .retry-button {
             display: inline-block;
             background: #8f7a66;
@@ -43,34 +47,35 @@
     </style>
     <!-- Clarity tracking code -->
     <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        (function (c, l, a, r, i, t, y) {
+            c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+            t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+            y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
         })(window, document, "clarity", "script", "vqq21od6di");
     </script>
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>1024</h1>
             <div class="scores-container">
                 <div class="score-box">
-                    <span class="score-label">分数</span>
+                    <span class="score-label" data-i18n="score">Score</span>
                     <span id="score">0</span>
                 </div>
                 <div class="score-box">
-                    <span class="score-label">最高分</span>
+                    <span class="score-label" data-i18n="best">Best</span>
                     <span id="best-score">0</span>
                 </div>
             </div>
         </header>
-        
+
         <div class="game-container">
             <div class="game-message">
                 <p></p>
                 <div class="lower">
-                    <a class="retry-button">再试一次</a>
+                    <a class="retry-button" data-i18n="retry">Try Again</a>
                 </div>
             </div>
             <div class="grid-container">
@@ -101,17 +106,20 @@
                 <div class="tile-container"></div>
             </div>
         </div>
-        
+
         <div class="game-explanation">
-            <p>使用 <strong>方向键</strong> 或 <strong>滑动</strong> 移动方块。相同数字的方块相撞时会合并成为它们的和。</p>
+            <p data-i18n="explanation">Use <strong>arrow keys</strong> or <strong>swipe</strong> to move the tiles.
+                Tiles with the same number merge into one when they touch.</p>
         </div>
     </div>
+    <script src="./js/i18n.js"></script>
     <script src="./js/game.js"></script>
     <!-- 添加错误处理脚本 -->
     <script>
-    window.addEventListener('error', function(e) {
-        console.error('资源加载错误:', e.target.src || e.target.href);
-    }, true);
+        window.addEventListener('error', function (e) {
+            console.error('资源加载错误:', e.target.src || e.target.href);
+        }, true);
     </script>
 </body>
+
 </html>

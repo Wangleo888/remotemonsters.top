@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - 页面未找到</title>
+    <title data-i18n="404_title">404 - 页面未找到</title>
     <style>
         * {
             margin: 0;
@@ -70,9 +70,10 @@
 
 <body>
     <h1>404</h1>
-    <h2>页面未找到</h2>
-    <p>抱歉，您尝试访问的页面不存在。可能是地址错误或者页面已被移除。</p>
-    <a href="index.html">返回首页</a>
+    <h2 data-i18n="404_heading">页面未找到</h2>
+    <p data-i18n="404_desc">抱歉，您尝试访问的页面不存在。可能是地址错误或者页面已被移除。</p>
+    <a href="index.html" data-i18n="404_back">返回首页</a>
+    <script src="./js/i18n.js"></script>
 </body>
 
 </html>

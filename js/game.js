@@ -1,12 +1,12 @@
 // 添加错误捕获和调试信息
-(function() {
+(function () {
     // 捕获全局错误
-    window.onerror = function(message, source, lineno, colno, error) {
+    window.onerror = function (message, source, lineno, colno, error) {
         console.error('全局错误:', message, source, lineno, colno);
         alert('游戏加载出错: ' + message);
         return true;
     };
-    
+
     // 原始游戏代码开始
     class Game {
         constructor() {
@@ -30,7 +30,7 @@
                 this.addRandomTile();
                 this.setupEventListeners();
                 this.renderGrid();
-                
+
                 // 添加窗口大小变化监听
                 window.addEventListener('resize', () => {
                     this.renderGrid();
@@ -45,7 +45,7 @@
             for (let i = 0; i < 4; i++) {
                 for (let j = 0; j < 4; j++) {
                     if (this.grid[i][j] === 0) {
-                        emptyCells.push({x: i, y: j});
+                        emptyCells.push({ x: i, y: j });
                     }
                 }
             }
@@ -62,23 +62,23 @@
                     console.error('未找到.tile-container元素');
                     return;
                 }
-                
+
                 container.innerHTML = '';
-                
+
                 // 直接获取网格单元格位置和尺寸
                 const gridCells = document.querySelectorAll('.grid-cell');
                 if (!gridCells || gridCells.length === 0) {
                     console.error('未找到.grid-cell元素');
                     return;
                 }
-                
+
                 const cellPositions = [];
-                
+
                 // 获取每个单元格的位置和尺寸
                 gridCells.forEach((cell, index) => {
                     const rect = cell.getBoundingClientRect();
                     const containerRect = container.getBoundingClientRect();
-                    
+
                     // 计算相对于tile-container的位置
                     cellPositions.push({
                         left: rect.left - containerRect.left,
@@ -87,7 +87,7 @@
                         height: rect.height
                     });
                 });
-                
+
                 // 渲染方块
                 for (let i = 0; i < 4; i++) {
                     for (let j = 0; j < 4; j++) {
@@ -97,19 +97,19 @@
                                 console.error(`未找到单元格位置: ${index}`);
                                 continue;
                             }
-                            
+
                             const position = cellPositions[index];
-                            
+
                             const tile = document.createElement('div');
                             tile.className = `tile tile-${this.grid[i][j]}`;
                             tile.textContent = this.grid[i][j];
-                            
+
                             // 使用精确计算的位置
                             tile.style.width = `${position.width}px`;
                             tile.style.height = `${position.height}px`;
                             tile.style.top = `${position.top}px`;
                             tile.style.left = `${position.left}px`;
-                            
+
                             container.appendChild(tile);
                         }
                     }
@@ -125,7 +125,7 @@
             const previousGrid = JSON.stringify(this.grid);
             let moved = false;
 
-            switch(direction) {
+            switch (direction) {
                 case 'up':
                     moved = this.moveUp();
                     break;
@@ -144,11 +144,11 @@
                 this.addRandomTile();
                 this.renderGrid();
                 this.updateScore();
-                
+
                 if (this.checkGameOver()) {
                     this.gameOver = true;
                     document.querySelector('.game-message').classList.add('game-over');
-                    document.querySelector('.game-message p').textContent = '游戏结束！';
+                    document.querySelector('.game-message p').textContent = window.i18nTranslate ? window.i18nTranslate('game_over') : '游戏结束！';
                 }
             }
         }
@@ -283,7 +283,7 @@
         setupEventListeners() {
             // 键盘控制
             document.addEventListener('keydown', (e) => {
-                switch(e.key) {
+                switch (e.key) {
                     case 'ArrowUp':
                         e.preventDefault();
                         this.move('up');
