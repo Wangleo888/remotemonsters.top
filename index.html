@@ -8,13 +8,20 @@
     <link rel="stylesheet" href="./css/style.css">
     <link rel="icon" href="./assets/favicon.ico">
     <meta name="description" content="1024游戏 - 合并方块，挑战高分">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="1024 Game - Addicting Puzzle">
+    <meta property="og:description"
+        content="Join the numbers and get to the 1024 tile! Play the classic 1024 puzzle game online.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://remotemonsters.top/">
     <!-- 确保资源可以加载 -->
     <style>
         /* 备用基础样式，防止CSS加载失败时页面完全没有样式 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fbfbfb;
-            color: #776e65;
+            background-color: var(--bg-color, #faf8ef);
+            color: var(--text-color, #776e65);
             display: flex;
             justify-content: center;
             min-height: 100vh;
@@ -28,7 +35,7 @@
         }
 
         .grid-container {
-            background: #bbada0;
+            background: var(--container-bg, #bbada0);
             border-radius: 8px;
             padding: 12px;
             margin-top: 20px;
@@ -36,7 +43,7 @@
 
         .retry-button {
             display: inline-block;
-            background: #8f7a66;
+            background: var(--btn-bg, #8f7a66);
             border-radius: 8px;
             padding: 12px 24px;
             color: white;
@@ -56,9 +63,30 @@
 </head>
 
 <body>
+    <div class="lights-out-overlay"></div>
     <div class="container">
         <header>
-            <h1>1024</h1>
+            <div class="header-left">
+                <h1>1024</h1>
+                <button id="theme-toggle" class="theme-switch" aria-label="Toggle Dark Mode">
+                    <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
             <div class="scores-container">
                 <div class="score-box">
                     <span class="score-label" data-i18n="score">Score</span>

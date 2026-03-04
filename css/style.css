@@ -1,3 +1,28 @@
+:root {
+    --bg-color: #faf8ef;
+    --text-color: #776e65;
+    --container-bg: #bbada0;
+    --cell-bg: rgba(238, 228, 218, 0.35);
+    --tile-bg: #eee4da;
+    --tile-color: #776e65;
+    --btn-bg: #8f7a66;
+    --btn-hover: #7f6a56;
+    --overlay-bg: rgba(238, 228, 218, 0.73);
+}
+
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --text-color: #eaeaea;
+    --container-bg: #2c2c2c;
+    --cell-bg: rgba(255, 255, 255, 0.05);
+    --tile-bg: #807e78;
+    --tile-color: #2c2c2c;
+    /* 深色文字，高对比度 */
+    --btn-bg: #e4934b;
+    --btn-hover: #cc7d38;
+    --overlay-bg: rgba(30, 30, 40, 0.85);
+}
+
 * {
     box-sizing: border-box;
     padding: 0;
@@ -6,12 +31,31 @@
 }
 
 body {
-    background-color: #fbfbfb;
-    color: #776e65;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* 熄灯过渡动画罩 */
+.lights-out-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.animating-theme .lights-out-overlay {
+    opacity: 1;
 }
 
 .container {
@@ -30,7 +74,56 @@ header {
 h1 {
     font-size: 48px;
     font-weight: bold;
-    color: #776e65;
+    color: var(--text-color);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.theme-switch {
+    background: var(--container-bg);
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, transform 0.2s;
+    color: var(--text-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.theme-switch:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.theme-switch svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+[data-theme="dark"] .sun-icon {
+    display: block;
+}
+
+[data-theme="dark"] .moon-icon {
+    display: none;
+}
+
+:root:not([data-theme="dark"]) .sun-icon {
+    display: none;
+}
+
+:root:not([data-theme="dark"]) .moon-icon {
+    display: block;
 }
 
 .scores-container {
@@ -39,7 +132,7 @@ h1 {
 }
 
 .score-box {
-    background: #bbada0;
+    background: var(--container-bg);
     padding: 10px 20px;
     border-radius: 12px;
     text-align: center;
@@ -53,7 +146,8 @@ h1 {
     text-transform: uppercase;
 }
 
-#score, #best-score {
+#score,
+#best-score {
     display: block;
     font-size: 24px;
     font-weight: bold;
@@ -61,7 +155,7 @@ h1 {
 
 .game-container {
     position: relative;
-    background: #bbada0;
+    background: var(--container-bg);
     padding: 12px;
     border-radius: 12px;
     margin-top: 20px;
@@ -71,7 +165,7 @@ h1 {
     position: relative;
     display: grid;
     grid-gap: 12px;
-    background: #bbada0;
+    background: var(--container-bg);
     border-radius: 8px;
     padding: 12px;
 }
@@ -85,7 +179,7 @@ h1 {
 .grid-cell {
     width: 100%;
     padding-bottom: 100%;
-    background: rgba(238, 228, 218, 0.35);
+    background: var(--cell-bg);
     border-radius: 8px;
 }
 
@@ -104,7 +198,8 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #eee4da;
+    background: var(--tile-bg);
+    color: var(--tile-color);
     border-radius: 8px;
     font-size: 36px;
     font-weight: bold;
@@ -114,41 +209,103 @@ h1 {
     line-height: 1;
 }
 
-.tile-2 { background: #eee4da; }
-.tile-4 { background: #ede0c8; }
-.tile-8 { background: #f2b179; color: white; }
-.tile-16 { background: #f59563; color: white; }
-.tile-32 { background: #f67c5f; color: white; }
-.tile-64 { background: #f65e3b; color: white; }
+.tile-2 {
+    background: #eee4da;
+}
+
+.tile-4 {
+    background: #ede0c8;
+}
+
+.tile-8 {
+    background: #f2b179;
+    color: white;
+}
+
+.tile-16 {
+    background: #f59563;
+    color: white;
+}
+
+.tile-32 {
+    background: #f67c5f;
+    color: white;
+}
+
+.tile-64 {
+    background: #f65e3b;
+    color: white;
+}
+
 .tile-128 {
     background: #edcf72;
     color: white;
     font-size: 28px;
     box-shadow: 0 0 10px rgba(243, 215, 116, 0.5);
 }
+
 .tile-256 {
     background: #edcc61;
     color: white;
     font-size: 28px;
     box-shadow: 0 0 10px rgba(243, 215, 116, 0.6);
 }
+
 .tile-512 {
     background: #edc850;
     color: white;
     font-size: 28px;
     box-shadow: 0 0 10px rgba(243, 215, 116, 0.7);
 }
+
 .tile-1024 {
     background: #edc53f;
     color: white;
     font-size: 24px;
     box-shadow: 0 0 10px rgba(243, 215, 116, 0.8);
 }
+
 .tile-2048 {
     background: #edc22e;
     color: white;
     font-size: 24px;
     box-shadow: 0 0 10px rgba(243, 215, 116, 0.9);
+}
+
+@keyframes appear {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.tile-new {
+    animation: appear 0.2s ease 100ms;
+    animation-fill-mode: backwards;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.tile-merged {
+    animation: pop 0.2s ease 100ms;
+    animation-fill-mode: backwards;
 }
 
 .game-message {
@@ -158,7 +315,7 @@ h1 {
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(238, 228, 218, 0.73);
+    background: var(--overlay-bg);
     z-index: 100;
     flex-direction: column;
     align-items: center;
@@ -175,11 +332,12 @@ h1 {
     font-size: 60px;
     font-weight: bold;
     margin-bottom: 20px;
+    color: var(--text-color);
 }
 
 .retry-button {
     display: inline-block;
-    background: #8f7a66;
+    background: var(--btn-bg);
     border-radius: 8px;
     padding: 12px 24px;
     color: white;
@@ -190,7 +348,7 @@ h1 {
 }
 
 .retry-button:hover {
-    background: #7f6a56;
+    background: var(--btn-hover);
 }
 
 .game-explanation {
@@ -198,4 +356,4 @@ h1 {
     text-align: center;
     font-size: 16px;
     line-height: 1.5;
-} 
+}

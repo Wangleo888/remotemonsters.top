@@ -3,13 +3,15 @@ const translations = {
         "title": "1024 Game",
         "score": "Score",
         "best": "Best",
-        "retry": "Try Again",
-        "explanation": "Use <strong>arrow keys</strong> or <strong>swipe</strong> to move the tiles. Tiles with the same number merge into one when they touch.",
+        "retry": "Play Again",
+        "explanation": "Use <strong>arrow keys</strong> or <strong>swipe</strong> to move the tiles. When two tiles with the same number touch, they merge into one!",
         "404_title": "404 - Page Not Found",
-        "404_heading": "Page Not Found",
-        "404_desc": "Sorry, the page you are looking for does not exist. It might have been moved or removed.",
-        "404_back": "Back to Home",
-        "game_over": "Game Over!"
+        "404_heading": "Oops! Page Not Found",
+        "404_desc": "The page you're looking for doesn't exist or has been moved.",
+        "404_back": "Back to Homepage",
+        "game_over": "Game Over!",
+        "share": "Share Score",
+        "share_msg": "I just scored {score} in 1024! Can you beat me?"
     },
     "zh-CN": {
         "title": "1024",
@@ -21,43 +23,51 @@ const translations = {
         "404_heading": "页面未找到",
         "404_desc": "抱歉，您尝试访问的页面不存在。可能是地址错误或者页面已被移除。",
         "404_back": "返回首页",
-        "game_over": "游戏结束！"
+        "game_over": "游戏结束！",
+        "share": "分享成绩",
+        "share_msg": "我刚才在 1024 游戏中拿到了 {score} 分！你能超过我吗？"
     },
     "zh-TW": {
         "title": "1024",
         "score": "分數",
         "best": "最高分",
-        "retry": "再試一次",
-        "explanation": "使用 <strong>方向鍵</strong> 或 <strong>滑動</strong> 移動方塊。相同數字的方塊相撞時會合併成為它們的和。",
-        "404_title": "404 - 頁面未找到",
-        "404_heading": "頁面未找到",
-        "404_desc": "抱歉，您嘗試訪問的頁面不存在。可能是地址錯誤或者頁面已被移除。",
-        "404_back": "返回首頁",
-        "game_over": "遊戲結束！"
+        "retry": "重玩一次",
+        "explanation": "使用 <strong>方向鍵</strong> 或 <strong>滑動</strong> 來移動方塊。當兩個相同數字的方塊相撞時，就會合併成一個！",
+        "404_title": "404 - 找不到網頁",
+        "404_heading": "找不到網頁",
+        "404_desc": "抱歉，您想訪問的頁面不存在，或是已經被移除了。",
+        "404_back": "回到首頁",
+        "game_over": "遊戲結束！",
+        "share": "分享成績",
+        "share_msg": "我剛才在 1024 遊戲中拿到了 {score} 分！你能超過我嗎？"
     },
     "ja": {
         "title": "1024 ゲーム",
         "score": "スコア",
         "best": "ベスト",
-        "retry": "リトライ",
-        "explanation": "<strong>矢印キー</strong> または <strong>スワイプ</strong> でタイルを移動します。同じ数字のタイルがぶつかると、1つに合体します。",
+        "retry": "もう一度",
+        "explanation": "<strong>方向キー</strong> または <strong>スワイプ</strong> でタイルを動かします。同じ数字のタイルがぶつかると、1つに合体します！",
         "404_title": "404 - ページが見つかりません",
-        "404_heading": "ページが見つかりません",
-        "404_desc": "申し訳ありませんが、お探しのページは存在しません。移動または削除された可能性があります。",
-        "404_back": "ホームに戻る",
-        "game_over": "ゲームオーバー！"
+        "404_heading": "お探しのページは見つかりません",
+        "404_desc": "申し訳ありませんが、アクセスされたページは存在しないか、移動した可能性があります。",
+        "404_back": "トップページへ戻る",
+        "game_over": "ゲームオーバー！",
+        "share": "スコアをシェア",
+        "share_msg": "1024ゲームで {score} 点を達成しました！私を超えられますか？"
     },
     "fr": {
         "title": "Jeu 1024",
         "score": "Score",
         "best": "Meilleur",
-        "retry": "Réessayer",
-        "explanation": "Utilisez <strong>les flèches</strong> ou <strong>glissez</strong> pour déplacer les tuiles. Les tuiles portant le même numéro fusionnent lorsqu'elles se touchent.",
-        "404_title": "404 - Page non trouvée",
-        "404_heading": "Page non trouvée",
-        "404_desc": "Désolé, la page que vous recherchez n'existe pas. Elle a peut-être été déplacée ou supprimée.",
+        "retry": "Rejouer",
+        "explanation": "Utilisez les <strong>flèches</strong> ou <strong>glissez</strong> pour déplacer les tuiles. Deux tuiles portant le même numéro fusionnent lorsqu'elles se touchent !",
+        "404_title": "404 - Page Introuvable",
+        "404_heading": "Oups ! Page Introuvable",
+        "404_desc": "Désolé, la page que vous recherchez n'existe pas ou a été déplacée.",
         "404_back": "Retour à l'accueil",
-        "game_over": "Fin du jeu !"
+        "game_over": "Fin du jeu !",
+        "share": "Partager",
+        "share_msg": "Je viens de marquer {score} à 1024 ! Peux-tu me battre ?"
     }
 };
 

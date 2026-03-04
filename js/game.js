@@ -11,7 +11,7 @@
     class Game {
         constructor() {
             try {
-                this.grid = Array(4).fill().map(() => Array(4).fill(0));
+                this.grid = Array(4).fill().map(() => Array(4).fill(null)); // Change: Store objects instead of numbers
                 this.score = 0;
                 this.bestScore = parseInt(localStorage.getItem('bestScore')) || 0;
                 this.gameOver = false;
@@ -31,6 +31,9 @@
                 this.setupEventListeners();
                 this.renderGrid();
 
+                // 初始化主题
+                this.initTheme();
+
                 // 添加窗口大小变化监听
                 window.addEventListener('resize', () => {
                     this.renderGrid();
@@ -40,18 +43,66 @@
             }
         }
 
+        initTheme() {
+            const themeBtn = document.getElementById('theme-toggle');
+            if (themeBtn) {
+                // 检查本地存储的主题偏好
+                const savedTheme = localStorage.getItem('theme');
+                if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+
+                // 绑定点击事件
+                themeBtn.addEventListener('click', () => {
+                    // 触发熄灯动画
+                    document.body.classList.add('animating-theme');
+
+                    setTimeout(() => {
+                        const currentTheme = document.documentElement.getAttribute('data-theme');
+                        if (currentTheme === 'dark') {
+                            document.documentElement.removeAttribute('data-theme');
+                            localStorage.setItem('theme', 'light');
+                        } else {
+                            document.documentElement.setAttribute('data-theme', 'dark');
+                            localStorage.setItem('theme', 'dark');
+                        }
+
+                        // 动画结束后移除罩子
+                        setTimeout(() => {
+                            document.body.classList.remove('animating-theme');
+                        }, 50); // 留出一点点渲染时间
+                    }, 150); // 等待罩子变黑（对应CSS的0.2s的大部分时间）
+                });
+            }
+        }
+
         addRandomTile() {
             const emptyCells = [];
             for (let i = 0; i < 4; i++) {
                 for (let j = 0; j < 4; j++) {
-                    if (this.grid[i][j] === 0) {
+                    if (this.grid[i][j] === null) {
                         emptyCells.push({ x: i, y: j });
                     }
                 }
             }
             if (emptyCells.length > 0) {
                 const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-                this.grid[randomCell.x][randomCell.y] = Math.random() < 0.9 ? 2 : 4;
+                this.grid[randomCell.x][randomCell.y] = {
+                    value: Math.random() < 0.9 ? 2 : 4,
+                    isNew: true,
+                    isMerged: false
+                };
+            }
+        }
+
+        resetTileStates() {
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    if (this.grid[i][j]) {
+                        this.grid[i][j].isNew = false;
+                        this.grid[i][j].isMerged = false;
+                    }
+                }
             }
         }
 
@@ -91,7 +142,8 @@
                 // 渲染方块
                 for (let i = 0; i < 4; i++) {
                     for (let j = 0; j < 4; j++) {
-                        if (this.grid[i][j] !== 0) {
+                        const cellData = this.grid[i][j];
+                        if (cellData !== null) {
                             const index = i * 4 + j;
                             if (!cellPositions[index]) {
                                 console.error(`未找到单元格位置: ${index}`);
@@ -99,10 +151,14 @@
                             }
 
                             const position = cellPositions[index];
-
                             const tile = document.createElement('div');
-                            tile.className = `tile tile-${this.grid[i][j]}`;
-                            tile.textContent = this.grid[i][j];
+
+                            let classes = `tile tile-${cellData.value}`;
+                            if (cellData.isNew) classes += ' tile-new';
+                            if (cellData.isMerged) classes += ' tile-merged';
+
+                            tile.className = classes;
+                            tile.textContent = cellData.value;
 
                             // 使用精确计算的位置
                             tile.style.width = `${position.width}px`;
@@ -122,8 +178,9 @@
         move(direction) {
             if (this.gameOver) return;
 
-            const previousGrid = JSON.stringify(this.grid);
+            this.resetTileStates();
             let moved = false;
+            let currentGridStr = this.getGridStr();
 
             switch (direction) {
                 case 'up':
@@ -149,103 +206,133 @@
                     this.gameOver = true;
                     document.querySelector('.game-message').classList.add('game-over');
                     document.querySelector('.game-message p').textContent = window.i18nTranslate ? window.i18nTranslate('game_over') : '游戏结束！';
+
+                    // Add conditional share button if not exists
+                    if (!document.querySelector('.share-button')) {
+                        const shareBtn = document.createElement('a');
+                        shareBtn.className = 'retry-button share-button';
+                        shareBtn.style.marginTop = '10px';
+                        shareBtn.style.background = 'var(--btn-bg)';
+                        shareBtn.textContent = window.i18nTranslate ? window.i18nTranslate('share') : 'Share';
+                        shareBtn.addEventListener('click', () => this.shareScore());
+                        document.querySelector('.lower').appendChild(shareBtn);
+                    }
                 }
             }
         }
 
+        shareScore() {
+            const textStr = window.i18nTranslate ? window.i18nTranslate('share_msg') : `I just scored ${this.score} in 1024!`;
+            const shareText = textStr.replace('{score}', this.score);
+            const shareUrl = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: '1024 Game',
+                    text: shareText,
+                    url: shareUrl
+                }).catch(console.error);
+            } else {
+                // Fallback to Twitter/X
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+                window.open(twitterUrl, '_blank');
+            }
+        }
+
+
+        getGridStr() {
+            return JSON.stringify(this.grid.map(row => row.map(cell => cell ? cell.value : null)));
+        }
+
         moveLeft() {
             let moved = false;
+            let beforeStr = this.getGridStr();
+
             for (let i = 0; i < 4; i++) {
-                let row = this.grid[i].filter(cell => cell !== 0);
+                let row = this.grid[i].filter(cell => cell !== null);
                 for (let j = 0; j < row.length - 1; j++) {
-                    if (row[j] === row[j + 1]) {
-                        row[j] *= 2;
-                        this.score += row[j];
+                    if (row[j].value === row[j + 1].value) {
+                        row[j] = { value: row[j].value * 2, isNew: false, isMerged: true };
+                        this.score += row[j].value;
                         row.splice(j + 1, 1);
-                        moved = true;
                     }
                 }
-                const newRow = row.concat(Array(4 - row.length).fill(0));
-                if (JSON.stringify(this.grid[i]) !== JSON.stringify(newRow)) {
-                    moved = true;
-                }
+                const newRow = row.concat(Array(4 - row.length).fill(null));
                 this.grid[i] = newRow;
             }
+            if (beforeStr !== this.getGridStr()) moved = true;
             return moved;
         }
 
         moveRight() {
             let moved = false;
+            let beforeStr = this.getGridStr();
+
             for (let i = 0; i < 4; i++) {
-                let row = this.grid[i].filter(cell => cell !== 0);
+                let row = this.grid[i].filter(cell => cell !== null);
                 for (let j = row.length - 1; j > 0; j--) {
-                    if (row[j] === row[j - 1]) {
-                        row[j] *= 2;
-                        this.score += row[j];
+                    if (row[j].value === row[j - 1].value) {
+                        row[j] = { value: row[j].value * 2, isNew: false, isMerged: true };
+                        this.score += row[j].value;
                         row.splice(j - 1, 1);
-                        moved = true;
                     }
                 }
-                const newRow = Array(4 - row.length).fill(0).concat(row);
-                if (JSON.stringify(this.grid[i]) !== JSON.stringify(newRow)) {
-                    moved = true;
-                }
+                const newRow = Array(4 - row.length).fill(null).concat(row);
                 this.grid[i] = newRow;
             }
+            if (beforeStr !== this.getGridStr()) moved = true;
             return moved;
         }
 
         moveUp() {
             let moved = false;
+            let beforeStr = this.getGridStr();
+
             for (let j = 0; j < 4; j++) {
                 let column = [];
                 for (let i = 0; i < 4; i++) {
                     column.push(this.grid[i][j]);
                 }
-                column = column.filter(cell => cell !== 0);
+                column = column.filter(cell => cell !== null);
                 for (let i = 0; i < column.length - 1; i++) {
-                    if (column[i] === column[i + 1]) {
-                        column[i] *= 2;
-                        this.score += column[i];
+                    if (column[i].value === column[i + 1].value) {
+                        column[i] = { value: column[i].value * 2, isNew: false, isMerged: true };
+                        this.score += column[i].value;
                         column.splice(i + 1, 1);
-                        moved = true;
                     }
                 }
-                column = column.concat(Array(4 - column.length).fill(0));
+                column = column.concat(Array(4 - column.length).fill(null));
                 for (let i = 0; i < 4; i++) {
-                    if (this.grid[i][j] !== column[i]) {
-                        moved = true;
-                    }
                     this.grid[i][j] = column[i];
                 }
             }
+            if (beforeStr !== this.getGridStr()) moved = true;
             return moved;
         }
 
         moveDown() {
             let moved = false;
+            let beforeStr = this.getGridStr();
+
             for (let j = 0; j < 4; j++) {
                 let column = [];
                 for (let i = 0; i < 4; i++) {
                     column.push(this.grid[i][j]);
                 }
-                column = column.filter(cell => cell !== 0);
+                column = column.filter(cell => cell !== null);
                 for (let i = column.length - 1; i > 0; i--) {
-                    if (column[i] === column[i - 1]) {
-                        column[i] *= 2;
-                        this.score += column[i];
+                    if (column[i].value === column[i - 1].value) {
+                        column[i] = { value: column[i].value * 2, isNew: false, isMerged: true };
+                        this.score += column[i].value;
                         column.splice(i - 1, 1);
-                        moved = true;
                     }
                 }
-                column = Array(4 - column.length).fill(0).concat(column);
+                column = Array(4 - column.length).fill(null).concat(column);
                 for (let i = 0; i < 4; i++) {
-                    if (this.grid[i][j] !== column[i]) {
-                        moved = true;
-                    }
                     this.grid[i][j] = column[i];
                 }
             }
+            if (beforeStr !== this.getGridStr()) moved = true;
             return moved;
         }
 
@@ -262,19 +349,19 @@
             // 检查是否还有空格
             for (let i = 0; i < 4; i++) {
                 for (let j = 0; j < 4; j++) {
-                    if (this.grid[i][j] === 0) return false;
+                    if (this.grid[i][j] === null) return false;
                 }
             }
 
             // 检查是否还有可以合并的相邻格子
             for (let i = 0; i < 4; i++) {
                 for (let j = 0; j < 3; j++) {
-                    if (this.grid[i][j] === this.grid[i][j + 1]) return false;
+                    if (this.grid[i][j].value === this.grid[i][j + 1].value) return false;
                 }
             }
             for (let i = 0; i < 3; i++) {
                 for (let j = 0; j < 4; j++) {
-                    if (this.grid[i][j] === this.grid[i + 1][j]) return false;
+                    if (this.grid[i][j].value === this.grid[i + 1][j].value) return false;
                 }
             }
             return true;
@@ -338,7 +425,7 @@
             const retryButton = document.querySelector('.retry-button');
             if (retryButton) {
                 retryButton.addEventListener('click', () => {
-                    this.grid = Array(4).fill().map(() => Array(4).fill(0));
+                    this.grid = Array(4).fill().map(() => Array(4).fill(null));
                     this.score = 0;
                     this.gameOver = false;
                     document.querySelector('.game-message').classList.remove('game-over');
