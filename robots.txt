@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://remotemonsters.top/sitemap.xml
