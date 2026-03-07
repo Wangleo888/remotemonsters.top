@@ -341,8 +341,8 @@
             if (this.score > this.bestScore) {
                 this.bestScore = this.score;
                 localStorage.setItem('bestScore', this.bestScore);
-                document.getElementById('best-score').textContent = this.bestScore;
             }
+            document.getElementById('best-score').textContent = this.bestScore;
         }
 
         checkGameOver() {
@@ -438,7 +438,7 @@
     }
 
     // 启动游戏
-    window.onload = () => {
+    document.addEventListener('DOMContentLoaded', () => {
         try {
             console.log('开始初始化游戏');
             new Game();
@@ -446,5 +446,5 @@
             console.error('启动游戏失败:', e);
             alert('游戏启动失败: ' + e.message);
         }
-    };
+    });
 })(); 
